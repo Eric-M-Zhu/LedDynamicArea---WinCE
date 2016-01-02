@@ -1,0 +1,64 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 9.00
+# Visual Studio 2005
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "LedDynamicArea", "LedDynamicArea\LedDynamicArea.vcproj", "{D94630DB-3A67-4E6E-9BE2-DD437D10A668}"
+	ProjectSection(ProjectDependencies) = postProject
+		{4020E8BE-2F30-4311-A152-DAE749221ADA} = {4020E8BE-2F30-4311-A152-DAE749221ADA}
+	EndProjectSection
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "JsonCpp", "JsonCpp\JsonCpp.vcproj", "{4020E8BE-2F30-4311-A152-DAE749221ADA}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "LedApp", "LedApp\LedApp.vcproj", "{51702130-3539-4CDD-8E33-EE32BDE3F5C0}"
+	ProjectSection(ProjectDependencies) = postProject
+		{D94630DB-3A67-4E6E-9BE2-DD437D10A668} = {D94630DB-3A67-4E6E-9BE2-DD437D10A668}
+	EndProjectSection
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|ProgWinCE_SDK (ARMV4I) = Debug|ProgWinCE_SDK (ARMV4I)
+		Debug|ProgWinCE_SDK (x86) = Debug|ProgWinCE_SDK (x86)
+		Release|ProgWinCE_SDK (ARMV4I) = Release|ProgWinCE_SDK (ARMV4I)
+		Release|ProgWinCE_SDK (x86) = Release|ProgWinCE_SDK (x86)
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{D94630DB-3A67-4E6E-9BE2-DD437D10A668}.Debug|ProgWinCE_SDK (ARMV4I).ActiveCfg = Debug|ProgWinCE_SDK (ARMV4I)
+		{D94630DB-3A67-4E6E-9BE2-DD437D10A668}.Debug|ProgWinCE_SDK (ARMV4I).Build.0 = Debug|ProgWinCE_SDK (ARMV4I)
+		{D94630DB-3A67-4E6E-9BE2-DD437D10A668}.Debug|ProgWinCE_SDK (ARMV4I).Deploy.0 = Debug|ProgWinCE_SDK (ARMV4I)
+		{D94630DB-3A67-4E6E-9BE2-DD437D10A668}.Debug|ProgWinCE_SDK (x86).ActiveCfg = Debug|ProgWinCE_SDK (x86)
+		{D94630DB-3A67-4E6E-9BE2-DD437D10A668}.Debug|ProgWinCE_SDK (x86).Build.0 = Debug|ProgWinCE_SDK (x86)
+		{D94630DB-3A67-4E6E-9BE2-DD437D10A668}.Debug|ProgWinCE_SDK (x86).Deploy.0 = Debug|ProgWinCE_SDK (x86)
+		{D94630DB-3A67-4E6E-9BE2-DD437D10A668}.Release|ProgWinCE_SDK (ARMV4I).ActiveCfg = Release|ProgWinCE_SDK (ARMV4I)
+		{D94630DB-3A67-4E6E-9BE2-DD437D10A668}.Release|ProgWinCE_SDK (ARMV4I).Build.0 = Release|ProgWinCE_SDK (ARMV4I)
+		{D94630DB-3A67-4E6E-9BE2-DD437D10A668}.Release|ProgWinCE_SDK (ARMV4I).Deploy.0 = Release|ProgWinCE_SDK (ARMV4I)
+		{D94630DB-3A67-4E6E-9BE2-DD437D10A668}.Release|ProgWinCE_SDK (x86).ActiveCfg = Release|ProgWinCE_SDK (x86)
+		{D94630DB-3A67-4E6E-9BE2-DD437D10A668}.Release|ProgWinCE_SDK (x86).Build.0 = Release|ProgWinCE_SDK (x86)
+		{D94630DB-3A67-4E6E-9BE2-DD437D10A668}.Release|ProgWinCE_SDK (x86).Deploy.0 = Release|ProgWinCE_SDK (x86)
+		{4020E8BE-2F30-4311-A152-DAE749221ADA}.Debug|ProgWinCE_SDK (ARMV4I).ActiveCfg = Debug|ProgWinCE_SDK (ARMV4I)
+		{4020E8BE-2F30-4311-A152-DAE749221ADA}.Debug|ProgWinCE_SDK (ARMV4I).Build.0 = Debug|ProgWinCE_SDK (ARMV4I)
+		{4020E8BE-2F30-4311-A152-DAE749221ADA}.Debug|ProgWinCE_SDK (ARMV4I).Deploy.0 = Debug|ProgWinCE_SDK (ARMV4I)
+		{4020E8BE-2F30-4311-A152-DAE749221ADA}.Debug|ProgWinCE_SDK (x86).ActiveCfg = Debug|ProgWinCE_SDK (x86)
+		{4020E8BE-2F30-4311-A152-DAE749221ADA}.Debug|ProgWinCE_SDK (x86).Build.0 = Debug|ProgWinCE_SDK (x86)
+		{4020E8BE-2F30-4311-A152-DAE749221ADA}.Debug|ProgWinCE_SDK (x86).Deploy.0 = Debug|ProgWinCE_SDK (x86)
+		{4020E8BE-2F30-4311-A152-DAE749221ADA}.Release|ProgWinCE_SDK (ARMV4I).ActiveCfg = Release|ProgWinCE_SDK (ARMV4I)
+		{4020E8BE-2F30-4311-A152-DAE749221ADA}.Release|ProgWinCE_SDK (ARMV4I).Build.0 = Release|ProgWinCE_SDK (ARMV4I)
+		{4020E8BE-2F30-4311-A152-DAE749221ADA}.Release|ProgWinCE_SDK (ARMV4I).Deploy.0 = Release|ProgWinCE_SDK (ARMV4I)
+		{4020E8BE-2F30-4311-A152-DAE749221ADA}.Release|ProgWinCE_SDK (x86).ActiveCfg = Release|ProgWinCE_SDK (x86)
+		{4020E8BE-2F30-4311-A152-DAE749221ADA}.Release|ProgWinCE_SDK (x86).Build.0 = Release|ProgWinCE_SDK (x86)
+		{4020E8BE-2F30-4311-A152-DAE749221ADA}.Release|ProgWinCE_SDK (x86).Deploy.0 = Release|ProgWinCE_SDK (x86)
+		{51702130-3539-4CDD-8E33-EE32BDE3F5C0}.Debug|ProgWinCE_SDK (ARMV4I).ActiveCfg = Debug|ProgWinCE_SDK (ARMV4I)
+		{51702130-3539-4CDD-8E33-EE32BDE3F5C0}.Debug|ProgWinCE_SDK (ARMV4I).Build.0 = Debug|ProgWinCE_SDK (ARMV4I)
+		{51702130-3539-4CDD-8E33-EE32BDE3F5C0}.Debug|ProgWinCE_SDK (ARMV4I).Deploy.0 = Debug|ProgWinCE_SDK (ARMV4I)
+		{51702130-3539-4CDD-8E33-EE32BDE3F5C0}.Debug|ProgWinCE_SDK (x86).ActiveCfg = Debug|ProgWinCE_SDK (x86)
+		{51702130-3539-4CDD-8E33-EE32BDE3F5C0}.Debug|ProgWinCE_SDK (x86).Build.0 = Debug|ProgWinCE_SDK (x86)
+		{51702130-3539-4CDD-8E33-EE32BDE3F5C0}.Debug|ProgWinCE_SDK (x86).Deploy.0 = Debug|ProgWinCE_SDK (x86)
+		{51702130-3539-4CDD-8E33-EE32BDE3F5C0}.Release|ProgWinCE_SDK (ARMV4I).ActiveCfg = Release|ProgWinCE_SDK (ARMV4I)
+		{51702130-3539-4CDD-8E33-EE32BDE3F5C0}.Release|ProgWinCE_SDK (ARMV4I).Build.0 = Release|ProgWinCE_SDK (ARMV4I)
+		{51702130-3539-4CDD-8E33-EE32BDE3F5C0}.Release|ProgWinCE_SDK (ARMV4I).Deploy.0 = Release|ProgWinCE_SDK (ARMV4I)
+		{51702130-3539-4CDD-8E33-EE32BDE3F5C0}.Release|ProgWinCE_SDK (x86).ActiveCfg = Release|ProgWinCE_SDK (x86)
+		{51702130-3539-4CDD-8E33-EE32BDE3F5C0}.Release|ProgWinCE_SDK (x86).Build.0 = Release|ProgWinCE_SDK (x86)
+		{51702130-3539-4CDD-8E33-EE32BDE3F5C0}.Release|ProgWinCE_SDK (x86).Deploy.0 = Release|ProgWinCE_SDK (x86)
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal

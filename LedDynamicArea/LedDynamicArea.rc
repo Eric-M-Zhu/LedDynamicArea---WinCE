@@ -1,0 +1,146 @@
+// Microsoft Visual C++ generated resource script.
+//
+#include "resource.h"
+
+#define APSTUDIO_READONLY_SYMBOLS
+/////////////////////////////////////////////////////////////////////////////
+//
+// Generated from the TEXTINCLUDE 2 resource.
+//
+#include "afxres.h"
+
+/////////////////////////////////////////////////////////////////////////////
+#undef APSTUDIO_READONLY_SYMBOLS
+
+/////////////////////////////////////////////////////////////////////////////
+// Chinese (P.R.C.) resources
+
+#if !defined(AFX_RESOURCE_DLL) || defined(AFX_TARG_CHS)
+#ifdef _WIN32
+LANGUAGE LANG_CHINESE, SUBLANG_CHINESE_SIMPLIFIED
+#pragma code_page(936)
+#endif //_WIN32
+
+#ifdef APSTUDIO_INVOKED
+/////////////////////////////////////////////////////////////////////////////
+//
+// TEXTINCLUDE
+//
+
+1 TEXTINCLUDE 
+BEGIN
+    "resource.h\0"
+END
+
+2 TEXTINCLUDE 
+BEGIN
+    "#include ""afxres.h""\r\n"
+    "\0"
+END
+
+3 TEXTINCLUDE 
+BEGIN
+    "\r\n"
+    "\0"
+END
+
+#endif    // APSTUDIO_INVOKED
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// Bitmap
+//
+
+IDB_MULTICOLOR_1        BITMAP                  "Res\\MultiColor_1.bmp"
+IDB_MULTICOLOR_2        BITMAP                  "Res\\MultiColor_2.bmp"
+IDB_MULTICOLOR_3        BITMAP                  "Res\\MultiColor_3.bmp"
+IDB_MULTICOLOR_4        BITMAP                  "Res\\MultiColor_4.bmp"
+IDB_MULTICOLOR_5        BITMAP                  "Res\\MultiColor_5.bmp"
+IDB_MULTICOLOR_6        BITMAP                  "Res\\MultiColor_6.bmp"
+IDB_MULTICOLOR_7        BITMAP                  "Res\\MultiColor_7.bmp"
+IDB_MULTICOLOR_8        BITMAP                  "Res\\MultiColor_8.bmp"
+IDB_MULTICOLOR_9        BITMAP                  "Res\\MultiColor_9.bmp"
+IDB_MULTICOLOR_10       BITMAP                  "Res\\MultiColor_10.bmp"
+IDB_MULTICOLOR_11       BITMAP                  "Res\\MultiColor_11.bmp"
+IDB_MULTICOLOR_12       BITMAP                  "Res\\MultiColor_12.bmp"
+IDB_MULTICOLOR_13       BITMAP                  "Res\\MultiColor_13.bmp"
+IDB_MULTICOLOR_14       BITMAP                  "Res\\MultiColor_14.bmp"
+IDB_MULTICOLOR_15       BITMAP                  "Res\\MultiColor_15.bmp"
+IDB_MULTICOLOR_16       BITMAP                  "Res\\MultiColor_16.bmp"
+IDB_MULTICOLOR_17       BITMAP                  "Res\\MultiColor_17.bmp"
+IDB_MULTICOLOR_18       BITMAP                  "Res\\MultiColor_18.bmp"
+IDB_MULTICOLOR_19       BITMAP                  "Res\\MultiColor_19.bmp"
+IDB_MULTICOLOR_20       BITMAP                  "Res\\MultiColor_20.bmp"
+IDB_MULTICOLOR_21       BITMAP                  "Res\\MultiColor_21.bmp"
+IDB_MULTICOLOR_22       BITMAP                  "Res\\MultiColor_22.bmp"
+IDB_MULTICOLOR_23       BITMAP                  "Res\\MultiColor_23.bmp"
+IDB_MULTICOLOR_24       BITMAP                  "Res\\MultiColor_24.bmp"
+IDB_MULTICOLOR_25       BITMAP                  "Res\\MultiColor_25.bmp"
+IDB_MULTICOLOR_26       BITMAP                  "Res\\MultiColor_26.bmp"
+IDB_MULTICOLOR_27       BITMAP                  "Res\\MultiColor_27.bmp"
+IDB_MULTICOLOR_28       BITMAP                  "Res\\MultiColor_28.bmp"
+IDB_MULTICOLOR_29       BITMAP                  "Res\\MultiColor_29.bmp"
+IDB_MULTICOLOR_30       BITMAP                  "Res\\MultiColor_30.bmp"
+IDB_MULTICOLOR_31       BITMAP                  "Res\\MultiColor_31.bmp"
+IDB_MULTICOLOR_32       BITMAP                  "Res\\MultiColor_32.bmp"
+IDB_MULTICOLOR_33       BITMAP                  "Res\\MultiColor_33.bmp"
+IDB_MULTICOLOR_34       BITMAP                  "Res\\MultiColor_34.bmp"
+IDB_MULTICOLOR_35       BITMAP                  "Res\\MultiColor_35.bmp"
+IDB_MULTICOLOR_36       BITMAP                  "Res\\MultiColor_36.bmp"
+IDB_MULTICOLOR_37       BITMAP                  "Res\\MultiColor_37.bmp"
+IDB_MULTICOLOR_38       BITMAP                  "Res\\MultiColor_38.bmp"
+IDB_MULTICOLOR_39       BITMAP                  "Res\\MultiColor_39.bmp"
+IDB_MULTICOLOR_40       BITMAP                  "Res\\MultiColor_40.bmp"
+IDB_MULTICOLOR_41       BITMAP                  "Res\\MultiColor_41.bmp"
+IDB_MULTICOLOR_42       BITMAP                  "Res\\MultiColor_42.bmp"
+IDB_MULTICOLOR_43       BITMAP                  "Res\\MultiColor_43.bmp"
+IDB_MULTICOLOR_44       BITMAP                  "Res\\MultiColor_44.bmp"
+IDB_MULTICOLOR_45       BITMAP                  "Res\\MultiColor_45.bmp"
+IDB_MULTICOLOR_46       BITMAP                  "Res\\MultiColor_46.bmp"
+IDB_MULTICOLOR_47       BITMAP                  "Res\\MultiColor_47.bmp"
+IDB_SINGLECOLOR_1       BITMAP                  "Res\\SingleColor_1.bmp"
+IDB_SINGLECOLOR_2       BITMAP                  "Res\\SingleColor_2.bmp"
+IDB_SINGLECOLOR_3       BITMAP                  "Res\\SingleColor_3.bmp"
+IDB_SINGLECOLOR_4       BITMAP                  "Res\\SingleColor_4.bmp"
+IDB_SINGLECOLOR_5       BITMAP                  "Res\\SingleColor_5.bmp"
+IDB_SINGLECOLOR_6       BITMAP                  "Res\\SingleColor_6.bmp"
+IDB_SINGLECOLOR_7       BITMAP                  "Res\\SingleColor_7.bmp"
+IDB_SINGLECOLOR_8       BITMAP                  "Res\\SingleColor_8.bmp"
+IDB_SINGLECOLOR_9       BITMAP                  "Res\\SingleColor_9.bmp"
+IDB_SINGLECOLOR_10      BITMAP                  "Res\\SingleColor_10.bmp"
+IDB_SINGLECOLOR_11      BITMAP                  "Res\\SingleColor_11.bmp"
+IDB_SINGLECOLOR_12      BITMAP                  "Res\\SingleColor_12.bmp"
+IDB_SINGLECOLOR_13      BITMAP                  "Res\\SingleColor_13.bmp"
+IDB_SINGLECOLOR_14      BITMAP                  "Res\\SingleColor_14.bmp"
+IDB_SINGLECOLOR_15      BITMAP                  "Res\\SingleColor_15.bmp"
+IDB_SINGLECOLOR_16      BITMAP                  "Res\\SingleColor_16.bmp"
+IDB_SINGLECOLOR_17      BITMAP                  "Res\\SingleColor_17.bmp"
+IDB_SINGLECOLOR_18      BITMAP                  "Res\\SingleColor_18.bmp"
+IDB_SINGLECOLOR_19      BITMAP                  "Res\\SingleColor_19.bmp"
+IDB_SINGLECOLOR_20      BITMAP                  "Res\\SingleColor_20.bmp"
+IDB_SINGLECOLOR_21      BITMAP                  "Res\\SingleColor_21.bmp"
+IDB_SINGLECOLOR_22      BITMAP                  "Res\\SingleColor_22.bmp"
+IDB_SINGLECOLOR_23      BITMAP                  "Res\\SingleColor_23.bmp"
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// FILE
+//
+IDR_CONTROLLERLIST		FILE					"Res\\ControllerList.json"
+
+#endif    // Chinese (P.R.C.) resources
+/////////////////////////////////////////////////////////////////////////////
+
+
+
+#ifndef APSTUDIO_INVOKED
+/////////////////////////////////////////////////////////////////////////////
+//
+// Generated from the TEXTINCLUDE 3 resource.
+//
+
+
+/////////////////////////////////////////////////////////////////////////////
+#endif    // not APSTUDIO_INVOKED
+
