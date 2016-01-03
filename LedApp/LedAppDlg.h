@@ -3,6 +3,13 @@
 
 #pragma once
 
+#include <list>
+using namespace std;
+
+#include "LedDynamicArea.h"
+
+#include "DynamicArea.h"
+
 typedef int(__stdcall *pInitialize)();	//初始化动态库
 typedef int(__stdcall *pUninitialize)();	//释放动态库
 typedef int(__stdcall *pAddScreen_Dynamic)(int nControlType, int nScreenNo, int nSendMode, int nWidth, int nHeight,
@@ -22,6 +29,7 @@ typedef int(__stdcall *pAddScreenDynamicAreaText)(int nScreenNo, int nDYAreaID,
     char* pText, int nShowSingle, char* pFontName, int nFontSize, int nBold, int nFontColor,
     int nStunt, int nRunSpeed, int nShowTime);
 typedef int(__stdcall *pDeleteScreen_Dynamic)(int nScreenNo);
+typedef int(__stdcall *pDeleteScreenDynamicArea)(int nScreenNo, int nDYAreaID);
 typedef int(__stdcall *pDeleteScreenDynamicAreaFile)(int nScreenNo, int nDYAreaID, int nFileOrd);
 typedef int(__stdcall *pSendDynamicAreaInfoCommand)(int nScreenNo, int nDYAreaID);
 typedef int(__stdcall *pSendDeleteDynamicAreasCommand)(int nScreenNo, int nDelAllDYArea, char* pDYAreaIDList);
@@ -64,11 +72,47 @@ private:
 	pAddScreenDynamicAreaFile AddScreenDynamicAreaFile;
 	pAddScreenDynamicAreaText AddScreenDynamicAreaText;
 	pDeleteScreen_Dynamic DeleteScreen_Dynamic;
+	pDeleteScreenDynamicArea DeleteScreenDynamicArea;
 	pDeleteScreenDynamicAreaFile DeleteScreenDynamicAreaFile;
 	pSendDynamicAreaInfoCommand SendDynamicAreaInfoCommand;
 	pSendDeleteDynamicAreasCommand SendDeleteDynamicAreasCommand;
 
+	list<DynamicArea*> m_areaList;
+
+	afx_msg void OnBnClickedSetScreen();
 	afx_msg void OnBnClickedDo();
-public:
 	afx_msg void OnBnClickedClear();
+	afx_msg void OnCbnSelchangeAreaList();
+	afx_msg void OnBnClickedAddArea();
+	afx_msg void OnBnClickedRemoveArea();
+
+	ControllerType GetControllerType();
+	void SetControllerType(ControllerType type);
+	CommunicationMode GetCommunicationMode();
+	void SetCommunicationMode(CommunicationMode mode);
+	int GetScreenWidth();
+	void SetScreenWidth(int width);
+	int GetScreenHeight();
+	void SetScreenHeight(int height);
+	char* GetCOMPort();
+	void SetCOMPort(const WCHAR *pCOMPort);
+	int GetBaudRate();
+	void SetBaudRate(int baudRate);
+
+	int GetAreaLeft();
+	void SetAreaLeft(int left);
+	int GetAreaTop();
+	void SetAreaTop(int top);
+	int GetAreaWidth();
+	void SetAreaWidth(int width);
+	int GetAreaHeight();
+	void SetAreaHeight(int height);
+
+	int GetFirstFreeAreaID();
+
+	void EnableDynamicArea(BOOL enable);
+	void EnableDynamicAreaContent(BOOL enable);
+
+	void ShowAreaInfo();
+	void RefreshDynamicAreaContentControls();
 };

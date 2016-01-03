@@ -408,6 +408,10 @@
 			UniqueIdentifier="{93995380-89BD-4b04-88EB-625FBE52EBFB}"
 			>
 			<File
+				RelativePath=".\DynamicArea.h"
+				>
+			</File>
+			<File
 				RelativePath=".\LedApp.h"
 				>
 			</File>
