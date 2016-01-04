@@ -42,6 +42,9 @@ public:
 	CLedAppDlg(CWnd* pParent = NULL);	// standard constructor
 	~CLedAppDlg();
 
+	void InsertFontName(CString fontName);
+
+
 // Dialog Data
 	enum { IDD = IDD_LEDAPP_DIALOG };
 
@@ -85,6 +88,10 @@ private:
 	afx_msg void OnCbnSelchangeAreaList();
 	afx_msg void OnBnClickedAddArea();
 	afx_msg void OnBnClickedRemoveArea();
+	afx_msg void OnBnClickedAddFile();
+	afx_msg void OnBnClickedAddText();
+	afx_msg void OnBnClickedUpdateArea();
+	afx_msg void OnBnClickedClearArea();
 
 	ControllerType GetControllerType();
 	void SetControllerType(ControllerType type);
@@ -108,11 +115,29 @@ private:
 	int GetAreaHeight();
 	void SetAreaHeight(int height);
 
+	int GetSingleLine();
+	void SetSingleLine(int singleLine);
+	CString GetFontName();
+	void SetFontName(CString fontName);
+	int GetFontSize();
+	void SetFontSize(int fontSize);
+	COLORREF GetFontColor();
+	void SetFontColor(int index);
+	int GetContentSpeed();
+	void SetContentSpeed(int speed);
+	int GetContentTime();
+	void SetContentTime(int second);
+
 	int GetFirstFreeAreaID();
 
 	void EnableDynamicArea(BOOL enable);
 	void EnableDynamicAreaContent(BOOL enable);
 
 	void ShowAreaInfo();
+	void ShowAreaContents();
 	void RefreshDynamicAreaContentControls();
+
+	void FillFontListComboBox();
+public:
+	afx_msg void OnBnClickedDeleteContent();
 };

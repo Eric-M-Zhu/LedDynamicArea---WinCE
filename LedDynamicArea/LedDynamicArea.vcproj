@@ -187,7 +187,7 @@
 		</Configuration>
 		<Configuration
 			Name="Release|ProgWinCE_SDK (ARMV4I)"
-			OutputDirectory="$(PlatformName)\$(ConfigurationName)"
+			OutputDirectory="$(SolutionDir)\$(PlatformName)\$(ConfigurationName)"
 			IntermediateDirectory="$(PlatformName)\$(ConfigurationName)"
 			ConfigurationType="2"
 			CharacterSet="1"
@@ -232,8 +232,11 @@
 			<Tool
 				Name="VCLinkerTool"
 				AdditionalOptions=" /subsystem:windowsce,6.00"
+				AdditionalDependencies="jsoncpp.lib ws2.lib"
 				OutputFile="$(OutDir)/LedDynamicArea.dll"
 				LinkIncremental="1"
+				AdditionalLibraryDirectories="$(OutDir)"
+				ModuleDefinitionFile="LedDynamicArea.def"
 				DelayLoadDLLs="$(NOINHERIT)"
 				GenerateDebugInformation="true"
 				ProgramDatabaseFile="$(OutDir)/LedDynamicArea.pdb"

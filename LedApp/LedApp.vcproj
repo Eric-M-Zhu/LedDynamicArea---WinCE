@@ -184,7 +184,7 @@
 		</Configuration>
 		<Configuration
 			Name="Release|ProgWinCE_SDK (ARMV4I)"
-			OutputDirectory="$(PlatformName)\$(ConfigurationName)"
+			OutputDirectory="$(SolutionDir)\$(PlatformName)\$(ConfigurationName)"
 			IntermediateDirectory="$(PlatformName)\$(ConfigurationName)"
 			ConfigurationType="1"
 			UseOfMFC="1"
@@ -211,6 +211,7 @@
 				Name="VCCLCompilerTool"
 				ExecutionBucket="7"
 				Optimization="2"
+				AdditionalIncludeDirectories="&quot;$(SolutionDir)/LedDynamicArea&quot;"
 				PreprocessorDefinitions="NDEBUG;_WIN32_WCE=$(CEVER);UNDER_CE;WINCE;$(ARCHFAM);$(_ARCHFAM_);STANDARDSHELL_UI_MODEL"
 				MinimalRebuild="false"
 				RuntimeLibrary="0"
@@ -258,7 +259,7 @@
 			/>
 			<DeploymentTool
 				ForceDirty="-1"
-				RemoteDirectory=""
+				RemoteDirectory="%CSIDL_PROGRAM_FILES%\LedDynamicArea"
 				RegisterOutput="0"
 				AdditionalFiles=""
 			/>
@@ -358,6 +359,10 @@
 			UniqueIdentifier="{4FC737F1-C7A5-4376-A066-2A32D752A2FF}"
 			>
 			<File
+				RelativePath=".\InputTextDlg.cpp"
+				>
+			</File>
+			<File
 				RelativePath=".\LedApp.cpp"
 				>
 			</File>
@@ -409,6 +414,10 @@
 			>
 			<File
 				RelativePath=".\DynamicArea.h"
+				>
+			</File>
+			<File
+				RelativePath=".\InputTextDlg.h"
 				>
 			</File>
 			<File

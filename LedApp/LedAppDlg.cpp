@@ -5,6 +5,8 @@
 #include "LedApp.h"
 #include "LedAppDlg.h"
 
+#include "InputTextDlg.h"
+
 #ifdef _DEBUG
 #define new DEBUG_NEW
 #endif
@@ -40,7 +42,14 @@ CLedAppDlg::~CLedAppDlg()
 {
 	for	(list<DynamicArea*>::iterator iter = m_areaList.begin(); iter != m_areaList.end(); ++iter)
 	{
-		delete *iter;
+		DynamicArea *pArea = *iter;
+
+		/*for	(list<AreaContent*>::iterator iter2 = pArea->contents.begin(); iter2 != pArea->contents.end(); ++iter2)
+		{
+			delete *iter2;
+		}*/
+
+		delete pArea;
 	}
 
 	Uninitialize();
@@ -57,12 +66,15 @@ BEGIN_MESSAGE_MAP(CLedAppDlg, CDialog)
 	ON_WM_SIZE()
 #endif
 	//}}AFX_MSG_MAP
-	ON_BN_CLICKED(IDC_DO, &CLedAppDlg::OnBnClickedDo)
-	ON_BN_CLICKED(IDC_CLEAR, &CLedAppDlg::OnBnClickedClear)
 	ON_BN_CLICKED(IDC_SET_SCREEN, &CLedAppDlg::OnBnClickedSetScreen)
 	ON_CBN_SELCHANGE(IDC_AREA_LIST, &CLedAppDlg::OnCbnSelchangeAreaList)
 	ON_BN_CLICKED(IDC_ADD_AREA, &CLedAppDlg::OnBnClickedAddArea)
 	ON_BN_CLICKED(IDC_REMOVE_AREA, &CLedAppDlg::OnBnClickedRemoveArea)
+	ON_BN_CLICKED(IDC_ADD_FILE, &CLedAppDlg::OnBnClickedAddFile)
+	ON_BN_CLICKED(IDC_ADD_TEXT, &CLedAppDlg::OnBnClickedAddText)
+	ON_BN_CLICKED(IDC_UPDATE_AREA, &CLedAppDlg::OnBnClickedUpdateArea)
+	ON_BN_CLICKED(IDC_CLEAR_AREA, &CLedAppDlg::OnBnClickedClearArea)
+	ON_BN_CLICKED(IDC_DELETE_CONTENT, &CLedAppDlg::OnBnClickedDeleteContent)
 END_MESSAGE_MAP()
 
 
@@ -89,8 +101,39 @@ BOOL CLedAppDlg::OnInitDialog()
 	SetAreaTop(0);
 	SetAreaWidth(64);
 	SetAreaHeight(16);
+
+	FillFontListComboBox();
+	SetFontName(L"Tahoma");
+	SetFontSize(12);
+	SetFontColor(0);
+	SetContentSpeed(8);
+	SetContentTime(5);
 	
 	return TRUE;  // return TRUE  unless you set the focus to a control
+}
+
+int CALLBACK EnumFontProc(const LOGFONT *lpFont, const TEXTMETRIC *lpTM, DWORD fontType, LPARAM lParam)
+{
+	CLedAppDlg *pDlg = (CLedAppDlg*)lParam;
+
+	pDlg->InsertFontName(lpFont->lfFaceName);
+
+	return 1;
+}
+
+void CLedAppDlg::FillFontListComboBox()
+{
+	HWND hDesktopWnd = ::GetDesktopWindow();
+	HDC hDesktopDC = ::GetWindowDC(hDesktopWnd);
+
+	EnumFontFamilies(hDesktopDC, NULL, EnumFontProc, (LPARAM)this);
+}
+
+void CLedAppDlg::InsertFontName(CString fontName)
+{
+	CComboBox *pFontListComboBox = (CComboBox*)GetDlgItem(IDC_FONT_LIST);
+
+	pFontListComboBox->AddString(fontName);
 }
 
 #if defined(_DEVICE_RESOLUTION_AWARE) && !defined(WIN32_PLATFORM_WFSP)
@@ -379,6 +422,126 @@ void CLedAppDlg::SetAreaHeight(int height)
 	GetDlgItem(IDC_AREA_HEIGHT)->SetWindowTextW(text);
 }
 
+int CLedAppDlg::GetSingleLine()
+{
+	CButton *pSingleLineCheckBox = (CButton*)GetDlgItem(IDC_SINGLE_LINE);
+
+	return pSingleLineCheckBox->GetCheck() == BST_CHECKED ? 1 : 0;
+}
+
+void CLedAppDlg::SetSingleLine(int singleLine)
+{
+	CButton *pSingleLineCheckBox = (CButton*)GetDlgItem(IDC_SINGLE_LINE);
+	
+	pSingleLineCheckBox->SetCheck(singleLine == 0 ? BST_UNCHECKED : BST_CHECKED);
+}
+
+CString CLedAppDlg::GetFontName()
+{
+	CString fontName;
+	CComboBox *pFontNameComboBox = (CComboBox*)GetDlgItem(IDC_FONT_LIST);
+	int index = pFontNameComboBox->GetCurSel();
+
+	if (index >= 0)
+	{
+		pFontNameComboBox->GetLBText(index, fontName);
+	}
+
+	return fontName;
+}
+
+void CLedAppDlg::SetFontName(CString fontName)
+{
+	CComboBox *pFontNameComboBox = (CComboBox*)GetDlgItem(IDC_FONT_LIST);
+
+	for	(int i = 0; i < pFontNameComboBox->GetCount(); ++i)
+	{
+		CString curFontName;
+
+		pFontNameComboBox->GetLBText(i, curFontName);
+
+		if (curFontName.CompareNoCase(fontName) == 0)
+		{
+			pFontNameComboBox->SetCurSel(i);
+		}
+	}
+}
+
+int CLedAppDlg::GetFontSize()
+{
+	CString text;
+
+	GetDlgItem(IDC_FONT_SIZE)->GetWindowTextW(text);
+
+	return _wtoi(text);
+}
+
+void CLedAppDlg::SetFontSize(int size)
+{
+	CString text;
+
+	text.Format(L"%d", size);
+	GetDlgItem(IDC_FONT_SIZE)->SetWindowTextW(text);
+}
+
+COLORREF CLedAppDlg::GetFontColor()
+{
+	CComboBox *pFontColorComboBox = (CComboBox*)GetDlgItem(IDC_FONT_COLOR);
+	int index = pFontColorComboBox->GetCurSel();
+
+	switch (index)
+	{
+	case 0:
+		return RGB(255, 0, 0);
+	case 1:
+		return RGB(0, 255, 0);
+	case 2:
+		return RGB(255, 255, 0);
+	}
+
+	return RGB(255, 0, 0);
+}
+
+void CLedAppDlg::SetFontColor(int index)
+{
+	CComboBox *pFontColorComboBox = (CComboBox*)GetDlgItem(IDC_FONT_COLOR);
+	pFontColorComboBox->SetCurSel(index);
+}
+
+int CLedAppDlg::GetContentSpeed()
+{
+	CString text;
+
+	GetDlgItem(IDC_CONTENT_SPEED)->GetWindowTextW(text);
+
+	return _wtoi(text);
+}
+
+void CLedAppDlg::SetContentSpeed(int speed)
+{
+	CString text;
+
+	text.Format(L"%d", speed);
+	GetDlgItem(IDC_CONTENT_SPEED)->SetWindowTextW(text);
+}
+
+int CLedAppDlg::GetContentTime()
+{
+	CString text;
+
+	GetDlgItem(IDC_CONTENT_TIME)->GetWindowTextW(text);
+
+	return _wtoi(text);
+}
+
+void CLedAppDlg::SetContentTime(int second)
+{
+	CString text;
+
+	text.Format(L"%d", second);
+	GetDlgItem(IDC_CONTENT_TIME)->SetWindowTextW(text);
+}
+
 void CLedAppDlg::EnableDynamicArea(BOOL enable)
 {
 	GetDlgItem(IDC_AREA_LIST)->EnableWindow(enable);
@@ -404,6 +567,8 @@ void CLedAppDlg::EnableDynamicAreaContent(BOOL enable)
 	GetDlgItem(IDC_CONTENT_SPEED)->EnableWindow(enable);
 	GetDlgItem(IDC_CONTENT_TIME)->EnableWindow(enable);
 	GetDlgItem(IDC_UPDATE_AREA)->EnableWindow(enable);
+	GetDlgItem(IDC_REMOVE_AREA)->EnableWindow(enable);
+	GetDlgItem(IDC_CLEAR_AREA)->EnableWindow(enable);
 }
 
 void CLedAppDlg::OnBnClickedSetScreen()
@@ -439,6 +604,7 @@ void CLedAppDlg::OnBnClickedSetScreen()
 void CLedAppDlg::OnCbnSelchangeAreaList()
 {
 	ShowAreaInfo();
+	ShowAreaContents();
 	RefreshDynamicAreaContentControls();
 }
 
@@ -475,6 +641,7 @@ void CLedAppDlg::OnBnClickedAddArea()
 
 		pAreaListComboBox->SetCurSel(index);
 		ShowAreaInfo();
+		ShowAreaContents();
 		RefreshDynamicAreaContentControls();
 	}
 
@@ -521,6 +688,25 @@ void CLedAppDlg::ShowAreaInfo()
 	GetDlgItem(IDC_AREA_INFO)->SetWindowTextW(areaInfo);
 }
 
+void CLedAppDlg::ShowAreaContents()
+{
+	CListBox *pAreaContentsListBox = (CListBox*)GetDlgItem(IDC_CONTENT_LIST);
+	pAreaContentsListBox->ResetContent();
+
+	CComboBox *pAreaListComboBox = (CComboBox*)GetDlgItem(IDC_AREA_LIST);
+	int index = pAreaListComboBox->GetCurSel();
+
+	if (index >= 0)
+	{
+		DynamicArea *pArea = (DynamicArea*)pAreaListComboBox->GetItemData(index);
+
+		for (vector<CString>::iterator iter = pArea->contents.begin(); iter != pArea->contents.end(); ++iter)
+		{
+			pAreaContentsListBox->AddString(*iter);
+		}
+	}
+}
+
 void CLedAppDlg::RefreshDynamicAreaContentControls()
 {
 	CComboBox *pAreaListComboBox = (CComboBox*)GetDlgItem(IDC_AREA_LIST);
@@ -539,11 +725,18 @@ void CLedAppDlg::OnBnClickedRemoveArea()
 
 	DynamicArea *pArea = (DynamicArea*)pAreaListComboBox->GetItemData(index);
 
-	if (RETURN_NOERROR == DeleteScreenDynamicArea(1, pArea->areaID))
+	/*if (RETURN_NOERROR == DeleteScreenDynamicArea(1, pArea->areaID))
 	{
 		m_areaList.remove(pArea);
 		pAreaListComboBox->DeleteString(index);
-	}
+	}*/
+
+	char areaIDText[8];
+	sprintf_s(areaIDText, 8, "%d", pArea->areaID);
+
+	SendDeleteDynamicAreasCommand(1, 0, areaIDText);
+	m_areaList.remove(pArea);
+	pAreaListComboBox->DeleteString(index);
 
 	if (pAreaListComboBox->GetCount() > 0)
 	{
@@ -557,5 +750,114 @@ void CLedAppDlg::OnBnClickedRemoveArea()
 	}
 
 	ShowAreaInfo();
+	ShowAreaContents();
 	RefreshDynamicAreaContentControls();
+}
+
+void CLedAppDlg::OnBnClickedAddFile()
+{
+	CComboBox *pAreaListComboBox = (CComboBox*)GetDlgItem(IDC_AREA_LIST);
+	int index = pAreaListComboBox->GetCurSel();
+
+	if (index == -1)
+		return;
+
+	DynamicArea *pArea = (DynamicArea*)pAreaListComboBox->GetItemData(index);
+
+	CFileDialog ofd(TRUE, L".txt", L"", OFN_FILEMUSTEXIST, L"Txt Files (*.txt)|*.txt||", this);
+
+	if (ofd.DoModal() == IDOK)
+	{
+		CString filename = ofd.GetPathName();
+		char ansiFilename[MAX_PATH];
+
+		WideCharToMultiByte(CP_ACP, 0, filename, -1, ansiFilename, MAX_PATH, NULL, NULL);
+
+		int singleLine = GetSingleLine();
+		CString fontName = GetFontName();
+		char ansiFontName[MAX_PATH];
+
+		WideCharToMultiByte(CP_ACP, 0, fontName, -1, ansiFontName, MAX_PATH, NULL, NULL);
+		int fontSize = GetFontSize();
+		int fontColor = (int)GetFontColor();
+		int contentSpeed = GetContentSpeed();
+		int contentTime = GetContentTime();
+
+		if (RETURN_NOERROR == AddScreenDynamicAreaFile(1, pArea->areaID, ansiFilename, GetSingleLine(), ansiFontName, fontSize, 0, fontColor, 2, contentSpeed, contentTime))
+		{
+		}
+	}
+}
+
+void CLedAppDlg::OnBnClickedAddText()
+{
+	CInputTextDlg dlg;
+
+	if (dlg.DoModal() == IDOK)
+	{
+		CComboBox *pAreaListComboBox = (CComboBox*)GetDlgItem(IDC_AREA_LIST);
+		int index = pAreaListComboBox->GetCurSel();
+		DynamicArea *pArea = (DynamicArea*)pAreaListComboBox->GetItemData(index);
+
+		CString text = dlg.GetText();
+		char ansiText[MAX_PATH];
+
+		WideCharToMultiByte(CP_ACP, 0, text, -1, ansiText, MAX_PATH, NULL, NULL);
+
+		int singleLine = GetSingleLine();
+		CString fontName = GetFontName();
+		char ansiFontName[MAX_PATH];
+		int fontSize = GetFontSize();
+		int fontColor = (int)GetFontColor();
+		int contentSpeed = GetContentSpeed();
+		int contentTime = GetContentTime();
+
+		if (RETURN_NOERROR == AddScreenDynamicAreaText(1, pArea->areaID, ansiText, GetSingleLine(), ansiFontName, fontSize, 0, fontColor, 2, contentSpeed, contentTime))
+		{
+			pArea->contents.push_back(text);
+		}
+	}
+
+	ShowAreaContents();
+}
+
+void CLedAppDlg::OnBnClickedUpdateArea()
+{
+	CComboBox *pAreaListComboBox = (CComboBox*)GetDlgItem(IDC_AREA_LIST);
+	int index = pAreaListComboBox->GetCurSel();
+	DynamicArea *pArea = (DynamicArea*)pAreaListComboBox->GetItemData(index);
+	SendDynamicAreaInfoCommand(1, pArea->areaID);
+}
+
+void CLedAppDlg::OnBnClickedClearArea()
+{
+	SendDeleteDynamicAreasCommand(1, 1, "");
+
+	CComboBox *pAreaListComboBox = (CComboBox*)GetDlgItem(IDC_AREA_LIST);
+	pAreaListComboBox->ResetContent();
+	ShowAreaInfo();
+	ShowAreaContents();
+	RefreshDynamicAreaContentControls();
+}
+
+void CLedAppDlg::OnBnClickedDeleteContent()
+{
+	CListBox *pAreaContentListBox = (CListBox*)GetDlgItem(IDC_CONTENT_LIST);
+	int index = pAreaContentListBox->GetCurSel();
+
+	if (index >= 0)
+	{
+		CComboBox *pAreaListComboBox = (CComboBox*)GetDlgItem(IDC_AREA_LIST);
+		int index2 = pAreaListComboBox->GetCurSel();
+
+		if (index2 == -1)
+			return;
+
+		DynamicArea *pArea = (DynamicArea*)pAreaListComboBox->GetItemData(index2);
+
+		DeleteScreenDynamicAreaFile(1, pArea->areaID, index);
+		pArea->contents.erase(pArea->contents.begin() + index);
+	}
+
+	ShowAreaContents();
 }

@@ -9,9 +9,6 @@ EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "JsonCpp", "JsonCpp\JsonCpp.vcproj", "{4020E8BE-2F30-4311-A152-DAE749221ADA}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "LedApp", "LedApp\LedApp.vcproj", "{51702130-3539-4CDD-8E33-EE32BDE3F5C0}"
-	ProjectSection(ProjectDependencies) = postProject
-		{D94630DB-3A67-4E6E-9BE2-DD437D10A668} = {D94630DB-3A67-4E6E-9BE2-DD437D10A668}
-	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

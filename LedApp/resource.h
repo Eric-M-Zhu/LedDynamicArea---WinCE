@@ -4,10 +4,12 @@
 //
 #define IDD_LEDAPP_DIALOG               102
 #define IDR_MAINFRAME                   128
+#define IDD_INPUT_TEXT                  130
 #define IDC_DO                          1000
 #define IDC_UPDATE_AREA                 1000
 #define IDC_EDIT1                       1001
 #define IDC_FONT_SIZE                   1001
+#define IDC_TEXT                        1001
 #define IDC_CLEAR                       1002
 #define IDC_CLEAR_AREA                  1002
 #define IDC_CONTROLLER_TYPE             1003
@@ -50,7 +52,7 @@
 // 
 #ifdef APSTUDIO_INVOKED
 #ifndef APSTUDIO_READONLY_SYMBOLS
-#define _APS_NEXT_RESOURCE_VALUE        130
+#define _APS_NEXT_RESOURCE_VALUE        131
 #define _APS_NEXT_COMMAND_VALUE         32771
 #define _APS_NEXT_CONTROL_VALUE         1035
 #define _APS_NEXT_SYMED_VALUE           101

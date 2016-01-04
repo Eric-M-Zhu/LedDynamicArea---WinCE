@@ -905,8 +905,12 @@ int __stdcall SendDeleteDynamicAreasCommand(int nScreenNo, int nDelAllDYArea, ch
 		{
 			nDYAreaID = atoi(iter->c_str());
 			nDYAreaOrd = GetSelScreenDYAreaOrd(nDYAreaID, devicelist_ja[nScreenOrd]["Screen_lstDYArea"]);
-			if (nDYAreaOrd > 0)
+			if (nDYAreaOrd >= 0)
 			{
+				/*for (int i = 0; i < devicelist_ja[nScreenOrd]["Screen_lstDYArea"][nDYAreaOrd]["Area_lstfile"].size(); ++i)
+				{
+					DeleteScreenDynamicAreaFile(nScreenNo, nDYAreaID, 0);
+				}*/
 				devicelist_ja[nScreenOrd]["Screen_lstDYArea"].removeIndex(nDYAreaOrd);
 			}
 			++nDelAreaCount;
