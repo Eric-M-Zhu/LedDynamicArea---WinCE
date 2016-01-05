@@ -225,7 +225,7 @@
 			<Tool
 				Name="VCResourceCompilerTool"
 				PreprocessorDefinitions="NDEBUG;_WIN32_WCE=$(CEVER);UNDER_CE"
-				Culture="1033"
+				Culture="2052"
 				AdditionalIncludeDirectories="$(IntDir)"
 			/>
 			<Tool

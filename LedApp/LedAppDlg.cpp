@@ -90,6 +90,11 @@ BOOL CLedAppDlg::OnInitDialog()
 	SetIcon(m_hIcon, FALSE);		// Set small icon
 
 	// TODO: Add extra initialization here
+	FillCommunicationModeComboBox();
+	FillFontColorComboBox();
+	FillContentStyle();
+	FillFontListComboBox();
+
 	SetControllerType(BX_5E3);
 	SetCommunicationMode(SEND_MODE_SERIALPORT);
 	SetScreenWidth(96);
@@ -102,14 +107,78 @@ BOOL CLedAppDlg::OnInitDialog()
 	SetAreaWidth(64);
 	SetAreaHeight(16);
 
-	FillFontListComboBox();
 	SetFontName(L"Tahoma");
 	SetFontSize(12);
 	SetFontColor(0);
+	SetContentStyle(2);
 	SetContentSpeed(8);
 	SetContentTime(5);
 	
 	return TRUE;  // return TRUE  unless you set the focus to a control
+}
+
+void CLedAppDlg::FillCommunicationModeComboBox()
+{
+	CComboBox *pCommunicationModeComboBox = (CComboBox*)GetDlgItem(IDC_PORT_TYPE);
+
+	pCommunicationModeComboBox->AddString(L"串口通讯");
+	pCommunicationModeComboBox->AddString(L"网络通讯");
+}
+
+void CLedAppDlg::FillFontColorComboBox()
+{
+	CComboBox *pFontColorComboBox = (CComboBox*)GetDlgItem(IDC_FONT_COLOR);
+
+	pFontColorComboBox->AddString(L"红色");
+	pFontColorComboBox->AddString(L"绿色");
+	pFontColorComboBox->AddString(L"黄色");
+}
+
+void CLedAppDlg::FillContentStyle()
+{
+	CComboBox *pContentStyleComboBox = (CComboBox*)GetDlgItem(IDC_CONTENT_STYLE);
+
+	pContentStyleComboBox->AddString(L"随机显示");
+	pContentStyleComboBox->AddString(L"静止显示");
+	pContentStyleComboBox->AddString(L"快速打出");
+	pContentStyleComboBox->AddString(L"向左移动");
+	pContentStyleComboBox->AddString(L"向左连移");
+	pContentStyleComboBox->AddString(L"向上移动");
+	pContentStyleComboBox->AddString(L"向上连移");
+	pContentStyleComboBox->AddString(L"闪烁");
+	pContentStyleComboBox->AddString(L"飘雪");
+	pContentStyleComboBox->AddString(L"冒泡");
+	pContentStyleComboBox->AddString(L"中间移出");
+	pContentStyleComboBox->AddString(L"左右移入");
+	pContentStyleComboBox->AddString(L"左右交叉移入");
+	pContentStyleComboBox->AddString(L"上下交叉移入");
+	pContentStyleComboBox->AddString(L"画卷闭合");
+	pContentStyleComboBox->AddString(L"画卷打开");
+	pContentStyleComboBox->AddString(L"向左拉伸");
+	pContentStyleComboBox->AddString(L"向右拉伸");
+	pContentStyleComboBox->AddString(L"向上拉伸");
+	pContentStyleComboBox->AddString(L"向下拉伸");
+	pContentStyleComboBox->AddString(L"向左镭射");
+	pContentStyleComboBox->AddString(L"向右镭射");
+	pContentStyleComboBox->AddString(L"向上镭射");
+	pContentStyleComboBox->AddString(L"向下镭射");
+	pContentStyleComboBox->AddString(L"左右交叉拉幕");
+	pContentStyleComboBox->AddString(L"上下交叉拉幕");
+	pContentStyleComboBox->AddString(L"分散左拉");
+	pContentStyleComboBox->AddString(L"水平百页");
+	pContentStyleComboBox->AddString(L"垂直百页");
+	pContentStyleComboBox->AddString(L"向左拉幕");
+	pContentStyleComboBox->AddString(L"向右拉幕");
+	pContentStyleComboBox->AddString(L"向上拉幕");
+	pContentStyleComboBox->AddString(L"向下拉幕");
+	pContentStyleComboBox->AddString(L"左右闭合");
+	pContentStyleComboBox->AddString(L"左右对开");
+	pContentStyleComboBox->AddString(L"上下闭合");
+	pContentStyleComboBox->AddString(L"上下对开");
+	pContentStyleComboBox->AddString(L"向右移动");
+	pContentStyleComboBox->AddString(L"向右连移");
+	pContentStyleComboBox->AddString(L"向下移动");
+	pContentStyleComboBox->AddString(L"向下连移");
 }
 
 int CALLBACK EnumFontProc(const LOGFONT *lpFont, const TEXTMETRIC *lpTM, DWORD fontType, LPARAM lParam)
@@ -508,6 +577,20 @@ void CLedAppDlg::SetFontColor(int index)
 	pFontColorComboBox->SetCurSel(index);
 }
 
+int CLedAppDlg::GetContentStyle()
+{
+	CComboBox *pContentStyleComboBox = (CComboBox*)GetDlgItem(IDC_CONTENT_STYLE);
+	
+	return pContentStyleComboBox->GetCurSel();
+}
+
+void CLedAppDlg::SetContentStyle(int style)
+{
+	CComboBox *pContentStyleComboBox = (CComboBox*)GetDlgItem(IDC_CONTENT_STYLE);
+	
+	pContentStyleComboBox->SetCurSel(style);
+}
+
 int CLedAppDlg::GetContentSpeed()
 {
 	CString text;
@@ -780,10 +863,11 @@ void CLedAppDlg::OnBnClickedAddFile()
 		WideCharToMultiByte(CP_ACP, 0, fontName, -1, ansiFontName, MAX_PATH, NULL, NULL);
 		int fontSize = GetFontSize();
 		int fontColor = (int)GetFontColor();
+		int contentStyle = GetContentStyle();
 		int contentSpeed = GetContentSpeed();
 		int contentTime = GetContentTime();
 
-		if (RETURN_NOERROR == AddScreenDynamicAreaFile(1, pArea->areaID, ansiFilename, GetSingleLine(), ansiFontName, fontSize, 0, fontColor, 2, contentSpeed, contentTime))
+		if (RETURN_NOERROR == AddScreenDynamicAreaFile(1, pArea->areaID, ansiFilename, GetSingleLine(), ansiFontName, fontSize, 0, fontColor, contentStyle, contentSpeed, contentTime))
 		{
 		}
 	}
@@ -809,10 +893,11 @@ void CLedAppDlg::OnBnClickedAddText()
 		char ansiFontName[MAX_PATH];
 		int fontSize = GetFontSize();
 		int fontColor = (int)GetFontColor();
+		int contentStyle = GetContentStyle();
 		int contentSpeed = GetContentSpeed();
 		int contentTime = GetContentTime();
 
-		if (RETURN_NOERROR == AddScreenDynamicAreaText(1, pArea->areaID, ansiText, GetSingleLine(), ansiFontName, fontSize, 0, fontColor, 2, contentSpeed, contentTime))
+		if (RETURN_NOERROR == AddScreenDynamicAreaText(1, pArea->areaID, ansiText, GetSingleLine(), ansiFontName, fontSize, 0, fontColor, contentStyle, contentSpeed, contentTime))
 		{
 			pArea->contents.push_back(text);
 		}

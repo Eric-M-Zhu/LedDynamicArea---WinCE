@@ -92,6 +92,7 @@ private:
 	afx_msg void OnBnClickedAddText();
 	afx_msg void OnBnClickedUpdateArea();
 	afx_msg void OnBnClickedClearArea();
+	afx_msg void OnBnClickedDeleteContent();
 
 	ControllerType GetControllerType();
 	void SetControllerType(ControllerType type);
@@ -123,6 +124,8 @@ private:
 	void SetFontSize(int fontSize);
 	COLORREF GetFontColor();
 	void SetFontColor(int index);
+	int GetContentStyle();
+	void SetContentStyle(int style);
 	int GetContentSpeed();
 	void SetContentSpeed(int speed);
 	int GetContentTime();
@@ -137,7 +140,8 @@ private:
 	void ShowAreaContents();
 	void RefreshDynamicAreaContentControls();
 
+	void FillCommunicationModeComboBox();
+	void FillFontColorComboBox();
 	void FillFontListComboBox();
-public:
-	afx_msg void OnBnClickedDeleteContent();
+	void FillContentStyle();
 };
