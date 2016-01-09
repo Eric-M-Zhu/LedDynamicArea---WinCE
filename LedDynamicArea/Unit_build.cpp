@@ -1194,7 +1194,7 @@ string MakeDoubleImage(HFONT hFont, COLORREF fontColor, const string &str, DWORD
 	HWND hDesktopWnd = GetDesktopWindow();
 	HDC hDesktopDC = GetWindowDC(hDesktopWnd);
 	HFONT hOldDesktopFont = (HFONT)SelectObject(hDesktopDC, hFont);
-	int strLength = str.size() + 1;
+	int strLength = MultiByteToWideChar(CP_ACP, 0, str.c_str(), -1, NULL, 0);
 	WCHAR *wszStr = new WCHAR[strLength];
 	RECT areaRect = { 0, 0, w, h };
 

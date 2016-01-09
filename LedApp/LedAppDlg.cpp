@@ -852,25 +852,43 @@ void CLedAppDlg::OnBnClickedAddFile()
 	if (ofd.DoModal() == IDOK)
 	{
 		CString filename = ofd.GetPathName();
-		char ansiFilename[MAX_PATH];
-
-		WideCharToMultiByte(CP_ACP, 0, filename, -1, ansiFilename, MAX_PATH, NULL, NULL);
-
-		int singleLine = GetSingleLine();
-		CString fontName = GetFontName();
-		char ansiFontName[MAX_PATH];
-
-		WideCharToMultiByte(CP_ACP, 0, fontName, -1, ansiFontName, MAX_PATH, NULL, NULL);
-		int fontSize = GetFontSize();
-		int fontColor = (int)GetFontColor();
-		int contentStyle = GetContentStyle();
-		int contentSpeed = GetContentSpeed();
-		int contentTime = GetContentTime();
-
-		if (RETURN_NOERROR == AddScreenDynamicAreaFile(1, pArea->areaID, ansiFilename, GetSingleLine(), ansiFontName, fontSize, 0, fontColor, contentStyle, contentSpeed, contentTime))
+		HANDLE hFile = CreateFile(filename, GENERIC_READ, 0, NULL, OPEN_EXISTING, 0, NULL);
+		
+		if (hFile != INVALID_HANDLE_VALUE)
 		{
+			DWORD textLength = GetFileSize(hFile, NULL) + 10;
+			char *ansiText = new char[textLength];
+			DWORD readLength;
+
+			memset(ansiText, 0, textLength);
+			ReadFile(hFile, (LPVOID)ansiText, textLength, &readLength, NULL);
+
+			CString fontName = GetFontName();
+			char ansiFontName[MAX_PATH];
+			int fontSize = GetFontSize();
+			int fontColor = (int)GetFontColor();
+			int contentStyle = GetContentStyle();
+			int contentSpeed = GetContentSpeed();
+			int contentTime = GetContentTime();
+
+			if (RETURN_NOERROR == AddScreenDynamicAreaText(1, pArea->areaID, ansiText, GetSingleLine(), ansiFontName, fontSize, 0, fontColor, contentStyle, contentSpeed, contentTime))
+			{
+				int wideTextLength = MultiByteToWideChar(CP_ACP, 0, ansiText, -1, NULL, 0);
+				WCHAR *wideText = new WCHAR[wideTextLength];
+
+				MultiByteToWideChar(CP_ACP, 0, ansiText, -1, wideText, wideTextLength);
+				pArea->contents.push_back(CString(wideText));
+
+				delete [] wideText;
+			}
+
+			delete [] ansiText;
+
+			CloseHandle(hFile);
 		}
 	}
+
+	ShowAreaContents();
 }
 
 void CLedAppDlg::OnBnClickedAddText()
@@ -884,9 +902,11 @@ void CLedAppDlg::OnBnClickedAddText()
 		DynamicArea *pArea = (DynamicArea*)pAreaListComboBox->GetItemData(index);
 
 		CString text = dlg.GetText();
-		char ansiText[MAX_PATH];
+		int ansiTextLength = WideCharToMultiByte(CP_ACP, 0, text, -1, NULL, 0, NULL, NULL);
 
-		WideCharToMultiByte(CP_ACP, 0, text, -1, ansiText, MAX_PATH, NULL, NULL);
+		char *ansiText = new char[ansiTextLength];
+		memset(ansiText, 0, ansiTextLength);
+		WideCharToMultiByte(CP_ACP, 0, text, -1, ansiText, ansiTextLength, NULL, NULL);
 
 		int singleLine = GetSingleLine();
 		CString fontName = GetFontName();
@@ -901,6 +921,8 @@ void CLedAppDlg::OnBnClickedAddText()
 		{
 			pArea->contents.push_back(text);
 		}
+
+		delete [] ansiText;
 	}
 
 	ShowAreaContents();
