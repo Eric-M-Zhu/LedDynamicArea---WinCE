@@ -1268,16 +1268,24 @@ string MakeDoubleImage(HFONT hFont, COLORREF fontColor, const string &str, DWORD
 	for (int i = 0; i < pageCount; ++i)
 	{
 		int actualPageHeight = maxPageHeight;
+		bool isLastPage = false;
 
-		if (i == (pageCount - 1))
-		{
+		if ((nStunt == STUNT_MOVE_UP) || (nStunt == STUNT_CONTINUOUS_MOVE_UP))
+			isLastPage = (i == 0);
+		else
+			isLastPage = (i == (pageCount - 1));
+
+		if (isLastPage)
 			actualPageHeight = areaRect.bottom - i * maxPageHeight;
-		}
 
 		RECT pageRect = { 0, 0, w, h };
 
 		FillRect(hPageDC, &pageRect, hBlackBrush);
-		BitBlt(hPageDC, 0, 0, w, actualPageHeight, hAreaDC, 0, i * maxPageHeight, SRCCOPY);
+
+		if ((nStunt == STUNT_MOVE_DOWN) || (nStunt == STUNT_CONTINUOUS_MOVE_DOWN))
+			BitBlt(hPageDC, 0, 0, w, actualPageHeight, hAreaDC, 0, (pageCount - i - 1) * maxPageHeight, SRCCOPY);
+		else
+			BitBlt(hPageDC, 0, 0, w, actualPageHeight, hAreaDC, 0, i * maxPageHeight, SRCCOPY);
 
 		string curPage;
 		BOOL bInvalidData;
