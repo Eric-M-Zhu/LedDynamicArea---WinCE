@@ -1043,7 +1043,8 @@ string MakebmpText(DWORD thrd_ScreenWidth, DWORD thrd_ScreenHeight, DWORD thrd_S
 			, AreaFile_Obj["File_Reserved3"].asUInt()
 			, AreaFile_Obj["File_Reserved4"].asUInt()
 			, AreaFile_Obj["File_Reserved5"].asUInt()
-			, AreaFile_Obj["File_Reserved6"].asUInt());
+			, AreaFile_Obj["File_Reserved6"].asUInt(),
+			nRealPageCount);
 	}
 	else
 	{
@@ -1072,7 +1073,7 @@ string MakebmpText(DWORD thrd_ScreenWidth, DWORD thrd_ScreenHeight, DWORD thrd_S
 
 string MakeSingleLineTextImage(HFONT hFont, COLORREF fontColor, const string &str, DWORD w, DWORD h, DWORD x, DWORD nPx, DWORD nMkStyle, DWORD nKardPixType, DWORD nScreenStyle,
 							   DWORD nStunt, DWORD nOutStunt, DWORD nRunSpeed, DWORD nShowTime, DWORD nShowCount,
-							   DWORD nReserved1, DWORD nReserved2, DWORD nReserved3, DWORD nReserved4, DWORD nReserved5, DWORD nReserved6)
+							   DWORD nReserved1, DWORD nReserved2, DWORD nReserved3, DWORD nReserved4, DWORD nReserved5, DWORD nReserved6, DWORD &nRealPageCount)
 {
 	string result = "";
 	HWND hDesktopWnd = GetDesktopWindow();
@@ -1101,12 +1102,17 @@ string MakeSingleLineTextImage(HFONT hFont, COLORREF fontColor, const string &st
 	HBRUSH bBlackBrush = CreateSolidBrush(RGB(0, 0, 0));
 	HBITMAP hOldAreaBmp = (HBITMAP)SelectObject(hAreaDC, hAreaBmp);
 
-	rect.bottom = h;
+	rect.right = areaBmpInfo.bmiHeader.biWidth;
+	rect.bottom = areaBmpInfo.bmiHeader.biHeight;
 	FillRect(hAreaDC, &rect, bBlackBrush);
 	SetTextColor(hAreaDC, fontColor);
 	SetBkColor(hAreaDC, RGB(0, 0, 0));
 
+	HFONT hOldAreaFont = (HFONT)SelectObject(hAreaDC, hFont);
+
 	DrawText(hAreaDC, wszStr, -1, &rect, DT_SINGLELINE);
+
+	SelectObject(hAreaDC, hOldAreaFont);
 
 	int pageCount = (rect.right + w - 1) / w;
 	HDC hPageDC = CreateCompatibleDC(hDesktopDC);
@@ -1140,9 +1146,14 @@ string MakeSingleLineTextImage(HFONT hFont, COLORREF fontColor, const string &st
 	pageParams += (char)nReserved5;
 	pageParams += (char)nReserved6;
 
+	nRealPageCount = (DWORD)pageCount;
+
 	for	(int i = 0; i < pageCount; ++i)
 	{
-		BitBlt(hPageDC, 0, 0, w, h, hAreaDC, i * w, 0, SRCCOPY);
+		if ((nStunt == STUNT_MOVE_RIGHT) || (nStunt == STUNT_CONTINUOUS_MOVE_RIGHT))
+			BitBlt(hPageDC, 0, 0, w, h, hAreaDC, (pageCount - i - 1) * w, 0, SRCCOPY);
+		else
+			BitBlt(hPageDC, 0, 0, w, h, hAreaDC, i * w, 0, SRCCOPY);
 
 		string curPage;
 		BOOL bInvalidData;
@@ -1179,87 +1190,122 @@ string MakeDoubleImage(HFONT hFont, COLORREF fontColor, const string &str, DWORD
 					   , DWORD nReserved2, DWORD nReserved3, DWORD nReserved4, DWORD nReserved5, DWORD nReserved6
 					   , DWORD nReserved7, bool bOnePage, DWORD &nRealPageCount)
 {
-	HBITMAP bmp2;
-	string str2 = "";
-	DWORD nAllWidth, nPageSize;
-	DWORD nPageStyle;
-	DWORD ncurPageAllLength;
-	string szcurPagebuf;
-	BOOL bInvalidData;
-
-	nPageStyle = 0;
-	nAllWidth = calpagesize(x, w, nPx, nKardPixType);
-	nPageSize = GetPageSize(nAllWidth, h, nPx);
-
+	string result;
 	HWND hDesktopWnd = GetDesktopWindow();
 	HDC hDesktopDC = GetWindowDC(hDesktopWnd);
-	HDC hMemoryDC = CreateCompatibleDC(hDesktopDC);
-
-	BITMAPINFO bmpInfo;
-	memset(&bmpInfo, 0, sizeof(bmpInfo));
-	bmpInfo.bmiHeader.biSize = sizeof(BITMAPINFOHEADER);
-	bmpInfo.bmiHeader.biWidth = w;
-	bmpInfo.bmiHeader.biHeight = h;
-	bmpInfo.bmiHeader.biBitCount = 24;
-	bmpInfo.bmiHeader.biSizeImage = (w * 3 + 1) / 2 * 2 * h;
-	bmpInfo.bmiHeader.biPlanes = 1;
-
-	BYTE *pBmp2Bits = NULL;
-	bmp2 = CreateDIBSection(hMemoryDC, &bmpInfo, DIB_RGB_COLORS, (void**)&pBmp2Bits, NULL, 0);
-
-	HBRUSH bBlackBrush = CreateSolidBrush(RGB(0, 0, 0));
-	HBITMAP hOldBitmap = (HBITMAP)SelectObject(hMemoryDC, bmp2);
-	RECT rect = { 0, 0, w, h};
-	HFONT hOldFont = (HFONT)SelectObject(hMemoryDC, hFont);
-
-	FillRect(hMemoryDC, &rect, bBlackBrush);
-	SetTextColor(hMemoryDC, fontColor);
-	SetBkColor(hMemoryDC, RGB(0, 0, 0));
-
+	HFONT hOldDesktopFont = (HFONT)SelectObject(hDesktopDC, hFont);
 	int strLength = str.size() + 1;
 	WCHAR *wszStr = new WCHAR[strLength];
+	RECT areaRect = { 0, 0, w, h };
 
 	MultiByteToWideChar(CP_ACP, 0, str.c_str(), -1, wszStr, strLength);
-	DrawText(hMemoryDC, wszStr, -1, &rect, 0);
 
+	DrawText(hDesktopDC, wszStr, -1, &areaRect, DT_WORDBREAK | DT_CALCRECT);
+
+	HDC hAreaDC = CreateCompatibleDC(hDesktopDC);
+
+	BITMAPINFO areaBmpInfo;
+	memset(&areaBmpInfo, 0, sizeof(areaBmpInfo));
+	areaBmpInfo.bmiHeader.biSize = sizeof(BITMAPINFOHEADER);
+	areaBmpInfo.bmiHeader.biWidth = areaRect.right;
+	areaBmpInfo.bmiHeader.biHeight = areaRect.bottom;
+	areaBmpInfo.bmiHeader.biBitCount = 24;
+	areaBmpInfo.bmiHeader.biSizeImage = (areaRect.right * 3 + 1) / 2 * 2 * areaRect.bottom;
+	areaBmpInfo.bmiHeader.biPlanes = 1;
+
+	BYTE *pAreaBmpBits = NULL;
+	HBITMAP hAreaBmp = CreateDIBSection(hAreaDC, &areaBmpInfo, DIB_RGB_COLORS, (void**)&pAreaBmpBits, NULL, 0);
+	HBRUSH hBlackBrush = CreateSolidBrush(RGB(0, 0, 0));
+	HBITMAP hOldAreaBitmap = (HBITMAP)SelectObject(hAreaDC, hAreaBmp);
+	HFONT hOldAreaFont = (HFONT)SelectObject(hAreaDC, hFont);
+
+	FillRect(hAreaDC, &areaRect, hBlackBrush);
+	SetTextColor(hAreaDC, fontColor);
+	SetBkColor(hAreaDC, RGB(0, 0, 0));
+
+	DrawText(hAreaDC, wszStr, -1, &areaRect, DT_WORDBREAK);
+
+	TEXTMETRIC tm;
+	GetTextMetrics(hAreaDC, &tm);
+
+	int maxPageHeight = h / tm.tmHeight * tm.tmHeight;
+
+	HDC hPageDC = CreateCompatibleDC(hAreaDC);
+
+	BITMAPINFO pageBmpInfo;
+	memset(&pageBmpInfo, 0, sizeof(pageBmpInfo));
+	pageBmpInfo.bmiHeader.biSize = sizeof(BITMAPINFOHEADER);
+	pageBmpInfo.bmiHeader.biWidth = w;
+	pageBmpInfo.bmiHeader.biHeight = h;
+	pageBmpInfo.bmiHeader.biBitCount = 24;
+	pageBmpInfo.bmiHeader.biSizeImage = (w * 3 + 1) / 2 * 2 * h;
+	pageBmpInfo.bmiHeader.biPlanes = 1;
+
+	BYTE *pPageBmpBits = NULL;
+	HBITMAP hPageBmp = CreateDIBSection(hPageDC, &pageBmpInfo, DIB_RGB_COLORS, (void**)&pPageBmpBits, NULL, 0);
+	HBITMAP hOldPageBmp = (HBITMAP)SelectObject(hPageDC, hPageBmp);
+
+	int pageCount = areaRect.bottom / maxPageHeight + ((areaRect.bottom % maxPageHeight != 0) ? 1 : 0);
+
+	string pageParams;
+
+	pageParams += (char)0;
+	pageParams += (char)nStunt;
+	pageParams += (char)nOutStunt;
+	pageParams += (char)nRunSpeed;
+	pageParams += (char)(nShowTime & 0xff);
+	pageParams += (char)((nShowTime >> 8) & 0xff);
+	pageParams += (char)(nShowCount);
+	pageParams += (char)nReserved1;
+	pageParams += (char)nReserved2;
+	pageParams += (char)nReserved3;
+	pageParams += (char)nReserved4;
+	pageParams += (char)nReserved5;
+	pageParams += (char)nReserved6;
+
+	nRealPageCount = (DWORD)pageCount;
+
+	for (int i = 0; i < pageCount; ++i)
+	{
+		int actualPageHeight = maxPageHeight;
+
+		if (i == (pageCount - 1))
+		{
+			actualPageHeight = areaRect.bottom - i * maxPageHeight;
+		}
+
+		RECT pageRect = { 0, 0, w, h };
+
+		FillRect(hPageDC, &pageRect, hBlackBrush);
+		BitBlt(hPageDC, 0, 0, w, actualPageHeight, hAreaDC, 0, i * maxPageHeight, SRCCOPY);
+
+		string curPage;
+		BOOL bInvalidData;
+
+		TranCanvToInfo(pPageBmpBits, curPage, x, w, h, nPx, nMkStyle, nKardPixType, nScreenStyle, bInvalidData);
+
+		DWORD curPageLength = pageParams.size() + curPage.size();
+
+		result += (char)(curPageLength & 0xff);
+		result += (char)((curPageLength >> 8) & 0xff);
+		result += (char)((curPageLength >> 16) & 0xff);
+		result += (char)((curPageLength >> 24) & 0xff);
+		result += pageParams;
+		result += curPage;
+	}
+
+	SelectObject(hPageDC, hOldPageBmp);
+	DeleteObject(hPageBmp);
+	DeleteDC(hPageDC);
+
+	SelectObject(hAreaDC, hOldAreaFont);
+	SelectObject(hAreaDC, hOldAreaBitmap);
+	DeleteObject(hBlackBrush);
+	DeleteObject(hAreaBmp);
+	DeleteDC(hAreaDC);
+	SelectObject(hDesktopDC, hOldDesktopFont);
 	delete [] wszStr;
-
-	szcurPagebuf.clear();
-	szcurPagebuf += (char)nPageStyle;
-	szcurPagebuf += (char)nStunt;
-	szcurPagebuf += (char)nOutStunt;
-	szcurPagebuf += (char)nRunSpeed;
-	szcurPagebuf += (char)(nShowTime & 0xff);
-	szcurPagebuf += (char)((nShowTime >> 8) & 0xff);
-	szcurPagebuf += (char)(nShowCount);
-	szcurPagebuf += (char)nReserved1;
-	szcurPagebuf += (char)nReserved2;
-	szcurPagebuf += (char)nReserved3;
-	szcurPagebuf += (char)nReserved4;
-	szcurPagebuf += (char)nReserved5;
-	szcurPagebuf += (char)nReserved6;
-
-	string pageBuffer;
-	TranCanvToInfo(pBmp2Bits, pageBuffer, x, w, h, nPx, nMkStyle, nKardPixType, nScreenStyle, bInvalidData);
-
-	szcurPagebuf += pageBuffer;
-	ncurPageAllLength = szcurPagebuf.size();
-	++nRealPageCount;
-
-	str2.clear();
-	str2 += (char)(ncurPageAllLength & 0xff);
-	str2 += (char)((ncurPageAllLength >> 8) & 0xff);
-	str2 += (char)((ncurPageAllLength >> 16) & 0xff);
-	str2 += (char)((ncurPageAllLength >> 24) & 0xff);
-
-	str2 += szcurPagebuf;
-
-	SelectObject(hMemoryDC, hOldFont);
-	SelectObject(hMemoryDC, hOldBitmap);
-	DeleteObject(bBlackBrush);
-	DeleteObject(bmp2);
-	DeleteDC(hMemoryDC);
 	ReleaseDC(hDesktopWnd, hDesktopDC);
 
-	return str2;
+	return result;
 }

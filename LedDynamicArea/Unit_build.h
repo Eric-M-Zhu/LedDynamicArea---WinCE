@@ -84,7 +84,7 @@ string MakegifImage(DWORD count, DWORD w, DWORD h, DWORD x, DWORD nPx, DWORD nMk
 
 string MakeSingleLineTextImage(HFONT hFont, COLORREF fontColor, const string &str, DWORD w, DWORD h, DWORD x, DWORD nPx, DWORD nMkStyle, DWORD nKardPixType, DWORD nScreenStyle,
 	DWORD nStunt, DWORD nOutStunt, DWORD nRunSpeed, DWORD nShowTime, DWORD nShowCount,
-	DWORD nReserved1, DWORD nReserved2, DWORD nReserved3, DWORD nReserved4, DWORD nReserved5, DWORD nReserved6);
+	DWORD nReserved1, DWORD nReserved2, DWORD nReserved3, DWORD nReserved4, DWORD nReserved5, DWORD nReserved6, DWORD &nRealPageCount);
 
 string MakeDoubleImage(HFONT hFont, COLORREF fontColor, const string &str, DWORD count, DWORD w, DWORD h, DWORD x, DWORD nPx, DWORD nMkStyle, DWORD nKardPixType, DWORD nScreenStyle,
 	DWORD nStunt, DWORD nOutStunt, DWORD nRunSpeed, DWORD nShowTime, DWORD nShowCount, DWORD nReserved1
