@@ -4,6 +4,7 @@
 #pragma once
 
 #include <list>
+#include <string>
 using namespace std;
 
 #include "LedDynamicArea.h"
@@ -93,6 +94,7 @@ private:
 	afx_msg void OnBnClickedUpdateArea();
 	afx_msg void OnBnClickedClearArea();
 	afx_msg void OnBnClickedDeleteContent();
+	afx_msg void OnCbnSelchangePortType();
 
 	ControllerType GetControllerType();
 	void SetControllerType(ControllerType type);
@@ -130,6 +132,10 @@ private:
 	void SetContentSpeed(int speed);
 	int GetContentTime();
 	void SetContentTime(int second);
+	string GetIPAddress();
+	void SetIPAddress(CString ipAddress);
+	int GetTCPPort();
+	void SetTCPPort(int tcpPort);
 
 	int GetFirstFreeAreaID();
 
@@ -144,4 +150,11 @@ private:
 	void FillFontColorComboBox();
 	void FillFontListComboBox();
 	void FillContentStyle();
+
+	void ShowSerialSetttings();
+	void ShowNetworkSettings();
+	void ShowPortGroupText();
+
+	BOOL ValidateNetworkSetting();
+	BOOL IsValidIP(string &ip);
 };

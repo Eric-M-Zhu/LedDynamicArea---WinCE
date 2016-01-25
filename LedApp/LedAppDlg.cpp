@@ -75,6 +75,7 @@ BEGIN_MESSAGE_MAP(CLedAppDlg, CDialog)
 	ON_BN_CLICKED(IDC_UPDATE_AREA, &CLedAppDlg::OnBnClickedUpdateArea)
 	ON_BN_CLICKED(IDC_CLEAR_AREA, &CLedAppDlg::OnBnClickedClearArea)
 	ON_BN_CLICKED(IDC_DELETE_CONTENT, &CLedAppDlg::OnBnClickedDeleteContent)
+	ON_CBN_SELCHANGE(IDC_PORT_TYPE, &CLedAppDlg::OnCbnSelchangePortType)
 END_MESSAGE_MAP()
 
 
@@ -101,6 +102,8 @@ BOOL CLedAppDlg::OnInitDialog()
 	SetScreenHeight(32);
 	SetCOMPort(L"COM3");
 	SetBaudRate(57600);
+	SetIPAddress(L"192.168.2.199");
+	SetTCPPort(5005);
 
 	SetAreaLeft(16);
 	SetAreaTop(0);
@@ -625,6 +628,39 @@ void CLedAppDlg::SetContentTime(int second)
 	GetDlgItem(IDC_CONTENT_TIME)->SetWindowTextW(text);
 }
 
+string CLedAppDlg::GetIPAddress()
+{
+	CString ipAddress;
+	char ansiIPAddress[128];
+
+	GetDlgItem(IDC_IP_ADDRESS)->GetWindowTextW(ipAddress);
+	WideCharToMultiByte(CP_ACP, 0, ipAddress, -1, ansiIPAddress, 128, NULL, NULL);
+
+	return ansiIPAddress;
+}
+
+void CLedAppDlg::SetIPAddress(CString ipAddress)
+{
+	GetDlgItem(IDC_IP_ADDRESS)->SetWindowTextW(ipAddress);
+}
+
+int CLedAppDlg::GetTCPPort()
+{
+	CString text;
+
+	GetDlgItem(IDC_TCP_PORT)->GetWindowTextW(text);
+
+	return _wtoi(text);
+}
+
+void CLedAppDlg::SetTCPPort(int tcpPort)
+{
+	CString text;
+
+	text.Format(L"%d", tcpPort);
+	GetDlgItem(IDC_TCP_PORT)->SetWindowTextW(text);
+}
+
 void CLedAppDlg::EnableDynamicArea(BOOL enable)
 {
 	GetDlgItem(IDC_AREA_LIST)->EnableWindow(enable);
@@ -658,29 +694,69 @@ void CLedAppDlg::OnBnClickedSetScreen()
 {
 	DeleteScreen_Dynamic(1);
 
-	if (RETURN_NOERROR == AddScreen_Dynamic(
-		(int)GetControllerType(),
-		1,
-		(int)GetCommunicationMode(),
-		GetScreenWidth(),
-		GetScreenHeight(),
-		2,
-		1,
-		GetCOMPort(),
-		GetBaudRate(),
-		"",
-		5005,
-		0,
-		"",
-		"",
-		"",
-		5005,
-		"",
-		"",
-		""
-		))
+	CommunicationMode mode = GetCommunicationMode();
+
+	if (mode == SEND_MODE_SERIALPORT)
 	{
-		EnableDynamicArea(TRUE);
+		if (RETURN_NOERROR == AddScreen_Dynamic(
+			(int)GetControllerType(),
+			1,
+			(int)GetCommunicationMode(),
+			GetScreenWidth(),
+			GetScreenHeight(),
+			2,
+			1,
+			GetCOMPort(),
+			GetBaudRate(),
+			"",
+			5005,
+			0,
+			"",
+			"",
+			"",
+			5005,
+			"",
+			"",
+			""
+			))
+		{
+			EnableDynamicArea(TRUE);
+		}
+	}
+	else if (mode == SEND_MODE_NETWORK)
+	{
+		if (!ValidateNetworkSetting())
+		{
+			return;
+		}
+
+		string ipAddress = GetIPAddress();
+		char *pIPAddress = (char*)ipAddress.c_str();
+
+		if (RETURN_NOERROR == AddScreen_Dynamic(
+			(int)GetControllerType(),
+			1,
+			(int)GetCommunicationMode(),
+			GetScreenWidth(),
+			GetScreenHeight(),
+			2,
+			1,
+			GetCOMPort(),
+			GetBaudRate(),
+			pIPAddress,
+			GetTCPPort(),
+			0,
+			"",
+			"",
+			"",
+			5005,
+			"",
+			"",
+			""
+			))
+		{
+			EnableDynamicArea(TRUE);
+		}
 	}
 }
 
@@ -967,4 +1043,109 @@ void CLedAppDlg::OnBnClickedDeleteContent()
 	}
 
 	ShowAreaContents();
+}
+
+void CLedAppDlg::OnCbnSelchangePortType()
+{
+	CommunicationMode mode = GetCommunicationMode();
+
+	ShowPortGroupText();
+
+	if (mode == SEND_MODE_SERIALPORT)
+	{
+		ShowSerialSetttings();
+	}
+	else if (mode == SEND_MODE_NETWORK)
+	{
+		ShowNetworkSettings();
+	}
+}
+
+void CLedAppDlg::ShowSerialSetttings()
+{
+	GetDlgItem(IDC_SERIAL_LABEL)->ShowWindow(SW_SHOW);
+	GetDlgItem(IDC_SERIAL_PORT)->ShowWindow(SW_SHOW);
+	GetDlgItem(IDC_BAUDRATE_LABEL)->ShowWindow(SW_SHOW);
+	GetDlgItem(IDC_BAUD_RATE)->ShowWindow(SW_SHOW);
+
+	GetDlgItem(IDC_IPADDR_LABEL)->ShowWindow(SW_HIDE);
+	GetDlgItem(IDC_IP_ADDRESS)->ShowWindow(SW_HIDE);
+	GetDlgItem(IDC_PORT_LABEL)->ShowWindow(SW_HIDE);
+	GetDlgItem(IDC_TCP_PORT)->ShowWindow(SW_HIDE);
+}
+	
+void CLedAppDlg::ShowNetworkSettings()
+{
+	GetDlgItem(IDC_SERIAL_LABEL)->ShowWindow(SW_HIDE);
+	GetDlgItem(IDC_SERIAL_PORT)->ShowWindow(SW_HIDE);
+	GetDlgItem(IDC_BAUDRATE_LABEL)->ShowWindow(SW_HIDE);
+	GetDlgItem(IDC_BAUD_RATE)->ShowWindow(SW_HIDE);
+
+	GetDlgItem(IDC_IPADDR_LABEL)->ShowWindow(SW_SHOW);
+	GetDlgItem(IDC_IP_ADDRESS)->ShowWindow(SW_SHOW);
+	GetDlgItem(IDC_PORT_LABEL)->ShowWindow(SW_SHOW);
+	GetDlgItem(IDC_TCP_PORT)->ShowWindow(SW_SHOW);
+}
+
+void CLedAppDlg::ShowPortGroupText()
+{
+	CString text;
+	CComboBox *pPortComboBox = (CComboBox*)GetDlgItem(IDC_PORT_TYPE);
+
+	pPortComboBox->GetLBText(pPortComboBox->GetCurSel(), text);
+	GetDlgItem(IDC_PORT_GROUP)->SetWindowTextW(text);
+}
+
+BOOL CLedAppDlg::ValidateNetworkSetting()
+{
+	CString INVALID_IP_ADDRESS = L"无效的IP地址";
+	CString INVALID_TCP_PORT = L"无效的端口(1 - 65535)";
+
+	string ipAddress = GetIPAddress();
+	if (!IsValidIP(ipAddress))
+	{
+		MessageBox(INVALID_IP_ADDRESS, L"Error", MB_OK | MB_ICONERROR);
+		GetDlgItem(IDC_IP_ADDRESS)->SetFocus();
+		return FALSE;
+	}
+
+	int port = GetTCPPort();
+	if ((port <= 0) || (port > 65535))
+	{
+		MessageBox(INVALID_TCP_PORT, L"Error", MB_OK | MB_ICONERROR);
+		GetDlgItem(IDC_TCP_PORT)->SetFocus();
+		return FALSE;
+	}
+
+	return TRUE;
+}
+
+BOOL CLedAppDlg::IsValidIP(string &ip)
+{
+    string delim=".";
+    string ret[4];
+ 
+    string::size_type loc=0,start =0;
+    for(int i=0;i<4;i++){
+        loc = ip.find(delim, start);
+        if(loc != string::npos){
+            ret[i]=ip.substr(start,loc-start);
+            start=loc+1;
+        }else if(i==3){
+            ret[i]=ip.substr(start);
+        }else{
+            //格式不对，应该有3个.
+            return FALSE;
+        }
+    }
+    for(int i=0;i<4;i++){
+        int num=atoi(ret[i].c_str());
+        if(num>255){
+            return FALSE;
+        }else if((num==0)&&(ret[i].compare("0"))){
+            return FALSE;
+        }
+    }
+ 
+    return TRUE;
 }
