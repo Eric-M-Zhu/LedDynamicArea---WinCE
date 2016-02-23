@@ -224,21 +224,21 @@ void CLedAppDlg::OnSize(UINT /*nType*/, int /*cx*/, int /*cy*/)
 #endif
 
 
-void CLedAppDlg::OnBnClickedDo()
-{
-	int result;
-
-	AddScreen_Dynamic(0x0354, 1, SEND_MODE_SERIALPORT, 192, 20, 2, 1, "COM3", 57600, "", 5005, 0, "", "", "", 5005, "", "", "curCommandData.dat");
-	AddScreenDynamicArea(1, 0, 0, 1, 1, "", 1, 16, 0, 192, 20, 255, 0, 255, 1, 0, 1);
-
-	WCHAR text[32];
-	char ansiText[32];
-	GetDlgItem(IDC_EDIT1)->GetWindowText(text, 32);
-	WideCharToMultiByte(CP_ACP, 0, text, -1, ansiText, 32, NULL, NULL);
-
-	result = AddScreenDynamicAreaText(1, 0, ansiText, 1, "Tahoma", 12, 0, 255, 2, 8, 5);
-	result = SendDynamicAreaInfoCommand(1, 0);
-}
+//void CLedAppDlg::OnBnClickedDo()
+//{
+//	int result;
+//
+//	AddScreen_Dynamic(0x0354, 1, SEND_MODE_SERIALPORT, 192, 20, 2, 1, "COM3", 57600, "", 5005, 0, "", "", "", 5005, "", "", "curCommandData.dat");
+//	AddScreenDynamicArea(1, 0, 0, 1, 1, "", 1, 16, 0, 192, 20, 255, 0, 255, 1, 0, 1);
+//
+//	WCHAR text[32];
+//	char ansiText[32];
+//	GetDlgItem(IDC_EDIT1)->GetWindowText(text, 32);
+//	WideCharToMultiByte(CP_ACP, 0, text, -1, ansiText, 32, NULL, NULL);
+//
+//	result = AddScreenDynamicAreaText(1, 0, ansiText, 1, "Tahoma", 12, 0, 255, 2, 8, 5);
+//	result = SendDynamicAreaInfoCommand(1, 0);
+//}
 
 void CLedAppDlg::OnBnClickedClear()
 {
@@ -418,12 +418,22 @@ void CLedAppDlg::SetCOMPort(const WCHAR *pCOMPort)
 
 int CLedAppDlg::GetBaudRate()
 {
-	return 57600;
+	CComboBox *pBaudRateComboBox = (CComboBox*)GetDlgItem(IDC_SERIAL_PORT);
+	
+	switch (pBaudRateComboBox->GetCurSel())
+	{
+	case 0:
+		return 9600;
+	default:
+		return 57600;
+	}
 }
 
 void CLedAppDlg::SetBaudRate(int baudRate)
 {
-	((CComboBox*)GetDlgItem(IDC_BAUD_RATE))->SetCurSel(0);
+	int selectedIndex = (baudRate == 9600) ? 0 : 1;
+
+	((CComboBox*)GetDlgItem(IDC_BAUD_RATE))->SetCurSel(selectedIndex);
 }
 
 int CLedAppDlg::GetAreaLeft()

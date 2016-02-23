@@ -84,7 +84,7 @@ private:
 	list<DynamicArea*> m_areaList;
 
 	afx_msg void OnBnClickedSetScreen();
-	afx_msg void OnBnClickedDo();
+	//afx_msg void OnBnClickedDo();
 	afx_msg void OnBnClickedClear();
 	afx_msg void OnCbnSelchangeAreaList();
 	afx_msg void OnBnClickedAddArea();
