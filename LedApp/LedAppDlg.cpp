@@ -100,9 +100,9 @@ BOOL CLedAppDlg::OnInitDialog()
 	SetCommunicationMode(SEND_MODE_SERIALPORT);
 	SetScreenWidth(96);
 	SetScreenHeight(32);
-	SetCOMPort(L"COM3");
+	SetCOMPort(L"COM1");
 	SetBaudRate(57600);
-	SetIPAddress(L"192.168.2.199");
+	SetIPAddress(L"192.168.1.10");
 	SetTCPPort(5005);
 
 	SetAreaLeft(16);
@@ -374,22 +374,24 @@ char* CLedAppDlg::GetCOMPort()
 	switch (pCOMPortComboBox->GetCurSel())
 	{
 	case 0:
-		return "COM1";
+		return "COM0";
 	case 1:
-		return "COM2";
+		return "COM1";
 	case 2:
-		return "COM3";
+		return "COM2";
 	case 3:
-		return "COM4";
+		return "COM3";
 	case 4:
-		return "COM5";
+		return "COM4";
 	case 5:
-		return "COM6";
+		return "COM5";
 	case 6:
-		return "COM7";
+		return "COM6";
 	case 7:
-		return "COM8";
+		return "COM7";
 	case 8:
+		return "COM8";
+	case 9:
 		return "COM9";
 	}
 
@@ -1024,10 +1026,11 @@ void CLedAppDlg::OnBnClickedUpdateArea()
 
 void CLedAppDlg::OnBnClickedClearArea()
 {
-	SendDeleteDynamicAreasCommand(1, 1, "");
+	//SendDeleteDynamicAreasCommand(1, 1, "");
 
 	CComboBox *pAreaListComboBox = (CComboBox*)GetDlgItem(IDC_AREA_LIST);
 	pAreaListComboBox->ResetContent();
+	m_areaList.clear();
 	ShowAreaInfo();
 	ShowAreaContents();
 	RefreshDynamicAreaContentControls();
