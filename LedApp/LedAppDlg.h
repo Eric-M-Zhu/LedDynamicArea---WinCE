@@ -104,7 +104,7 @@ private:
 	void SetScreenWidth(int width);
 	int GetScreenHeight();
 	void SetScreenHeight(int height);
-	char* GetCOMPort();
+	string GetCOMPort();
 	void SetCOMPort(const WCHAR *pCOMPort);
 	int GetBaudRate();
 	void SetBaudRate(int baudRate);
@@ -146,6 +146,7 @@ private:
 	void ShowAreaContents();
 	void RefreshDynamicAreaContentControls();
 
+	void FillComPortComboBox();
 	void FillCommunicationModeComboBox();
 	void FillFontColorComboBox();
 	void FillFontListComboBox();

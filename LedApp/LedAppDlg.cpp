@@ -91,6 +91,7 @@ BOOL CLedAppDlg::OnInitDialog()
 	SetIcon(m_hIcon, FALSE);		// Set small icon
 
 	// TODO: Add extra initialization here
+	FillComPortComboBox();
 	FillCommunicationModeComboBox();
 	FillFontColorComboBox();
 	FillContentStyle();
@@ -118,6 +119,19 @@ BOOL CLedAppDlg::OnInitDialog()
 	SetContentTime(5);
 	
 	return TRUE;  // return TRUE  unless you set the focus to a control
+}
+
+void CLedAppDlg::FillComPortComboBox()
+{
+	CComboBox *pComPortComboBox = (CComboBox*)GetDlgItem(IDC_SERIAL_PORT);
+
+	for (int i = 0; i < 10; ++i)
+	{
+		CString shownPortName;
+
+		shownPortName.Format(L"COM%d", i);
+		pComPortComboBox->AddString(shownPortName);
+	}
 }
 
 void CLedAppDlg::FillCommunicationModeComboBox()
@@ -367,35 +381,18 @@ void CLedAppDlg::SetScreenHeight(int height)
 	GetDlgItem(IDC_SCREEN_HEIGHT)->SetWindowTextW(screenHeightText);
 }
 
-char* CLedAppDlg::GetCOMPort()
+string CLedAppDlg::GetCOMPort()
 {
 	CComboBox *pCOMPortComboBox = (CComboBox*)GetDlgItem(IDC_SERIAL_PORT);
+	CString portName;
+	char ansiPortName[32];
 
-	switch (pCOMPortComboBox->GetCurSel())
-	{
-	case 0:
-		return "COM0";
-	case 1:
-		return "COM1";
-	case 2:
-		return "COM2";
-	case 3:
-		return "COM3";
-	case 4:
-		return "COM4";
-	case 5:
-		return "COM5";
-	case 6:
-		return "COM6";
-	case 7:
-		return "COM7";
-	case 8:
-		return "COM8";
-	case 9:
-		return "COM9";
-	}
+	pCOMPortComboBox->GetLBText(pCOMPortComboBox->GetCurSel(), portName);
 
-	return "COM1";
+	memset(ansiPortName, 0, 32);
+	WideCharToMultiByte(CP_ACP, 0, portName, portName.GetLength(), ansiPortName, 32, NULL, NULL);
+
+	return ansiPortName;
 }
 
 void CLedAppDlg::SetCOMPort(const WCHAR *pCOMPort)
@@ -718,7 +715,7 @@ void CLedAppDlg::OnBnClickedSetScreen()
 			GetScreenHeight(),
 			2,
 			1,
-			GetCOMPort(),
+			(char*)GetCOMPort().c_str(),
 			GetBaudRate(),
 			"",
 			5005,
@@ -753,7 +750,7 @@ void CLedAppDlg::OnBnClickedSetScreen()
 			GetScreenHeight(),
 			2,
 			1,
-			GetCOMPort(),
+			(char*)GetCOMPort().c_str(),
 			GetBaudRate(),
 			pIPAddress,
 			GetTCPPort(),
