@@ -1026,7 +1026,7 @@ void CLedAppDlg::OnBnClickedUpdateArea()
 
 void CLedAppDlg::OnBnClickedClearArea()
 {
-	//SendDeleteDynamicAreasCommand(1, 1, "");
+	SendDeleteDynamicAreasCommand(1, 1, "");
 
 	CComboBox *pAreaListComboBox = (CComboBox*)GetDlgItem(IDC_AREA_LIST);
 	pAreaListComboBox->ResetContent();

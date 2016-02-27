@@ -805,6 +805,7 @@ int __stdcall SendDynamicAreaInfoCommand(int nScreenNo, int nDYAreaID)
 	case SEND_MODE_Server_2G:
 	case SEND_MODE_Server_3G:
 		srt_PHY1Header.DstAddr = CONTROLLER_ADDRESS_WILDCARD;
+		srt_PHY1Header.DeviceType = devicelist_ja[nScreenOrd]["Screen_control"].asUInt();
 		break;
 	case SEND_MODE_SAVEFILE:
 	{
@@ -937,6 +938,7 @@ int __stdcall SendDeleteDynamicAreasCommand(int nScreenNo, int nDelAllDYArea, ch
 	case SEND_MODE_Server_2G:
 	case SEND_MODE_Server_3G:
 		srt_PHY1Header.DstAddr = CONTROLLER_ADDRESS_WILDCARD;
+		srt_PHY1Header.DeviceType = devicelist_ja[nScreenOrd]["Screen_control"].asUInt();
 		break;
 	case SEND_MODE_SAVEFILE:
 		{

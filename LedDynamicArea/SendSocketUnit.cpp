@@ -2,7 +2,7 @@
 #include "SendSocketUnit.h"
 #include "Phy01.h"
 
-DWORD CreateMySocket(DWORD nSocketMode, string szDestAddr, DWORD nPort, SOCKET skt)
+DWORD CreateMySocket(DWORD nSocketMode, string szDestAddr, DWORD nPort, SOCKET &skt)
 {
 	sockaddr_in addr;
 	BOOL opt;
@@ -72,7 +72,7 @@ bool CloseMySocket(SOCKET &skt)
 	return true;
 }
 
-DWORD SendSocketData(tagNetwork tag_NetWork, tagstruct_PHY1Header m_srt_PHY1Header,
+DWORD SendSocketData(tagNetwork tag_NetWork, tagstruct_PHY1Header &m_srt_PHY1Header,
 	const char *pSendBuf, DWORD nSendLength, tagstruct_PHY1Header &m_srt_ReadPHY1Header,
 	char *pReadBuf, DWORD &nReadLength)
 {
